@@ -1,9 +1,7 @@
-import React from 'react';
-
-export default function Index(){
-    return (
-        <div>
-            <h1>Hola soy el Mauro JAJA, lol</h1>
-        </div>
-    )
+export default function Home() {
+  return (
+    <h1 className="text-3xl font-bold underline">
+      Hello world!
+    </h1>
+  )
 }
