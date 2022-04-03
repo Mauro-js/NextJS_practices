@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useSWR from 'swr';
-import Layout from '../../commponents/layout';
+import Layout from '../../components/layout';
 
 
 const BASE_URL = 'https://jsonplaceholder.typicode.com';

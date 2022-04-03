@@ -1,7 +1,7 @@
 const BASE_URL = 'https://jsonplaceholder.typicode.com';
 import useSWR from "swr";
 import { useRouter } from "next/router";
-import Layout from '../../../commponents/layout';
+import Layout from '../../../components/layout';
 
 const fetcher = async url => {
     const res = await fetch(`${url}`)
