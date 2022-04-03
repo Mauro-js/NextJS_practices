@@ -1,6 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useSWR from 'swr';
+import Layout from '../../commponents/layout';
+
 
 const BASE_URL = 'https://jsonplaceholder.typicode.com';
 
@@ -48,6 +50,7 @@ const Cards = ({posts}) => {
 }
 
 const fetcher = async url => {
+
     const res = await fetch(`${url}`)
 
     if(!res.ok){
@@ -56,13 +59,24 @@ const fetcher = async url => {
         error.status = res.status;
         throw error;
     }
-   
-    return res.json()
+
+    return res.json();
 }
 
 export default function Index(){
+    const [id, setId] = useState('')
+    const [realId, setRealId] = useState(null)
 
-    const {data, error} = useSWR(`${BASE_URL}/posts`, fetcher);
+    const {data, error} = useSWR( realId ? `${BASE_URL}/posts?userId=${realId}` : `${BASE_URL}/posts`, fetcher);
+
+    useEffect(() => {
+       setTimeout(() => setRealId(id),1000);
+    },[id])
+
+    function handleIdChange(event) {
+        setId(event.target.value)
+      }
+
 
     if(!data){
         return <div className='flex justify-center items-center h-screen'>
@@ -76,40 +90,33 @@ export default function Index(){
 
     return (
         <>
-                <nav className="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
-                    <div className="container flex flex-wrap justify-between items-center mx-auto">
-                        <div className="hidden w-full md:block md:w-auto" id="mobile-menu">
-                        <ul className="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-                            <li>
-                            <a href="#" className="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white" aria-current="page">Home</a>
-                            </li>
-                            <li>
-                            <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">About</a>
-                            </li>
-                            <li>
-                            <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Services</a>
-                            </li>
-                            <li>
-                            <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Pricing</a>
-                            </li>
-                            <li>
-                            <a href="#" className="block py-2 pr-4 pl-3 text-gray-700 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Contact</a>
-                            </li>
-                        </ul>
+        <Layout title={'Posts'} description={'List of posts'}>
+                <div className='p-4 sm:w-1/2 lg:w-1/4'>
+                    <label htmlFor="price" className="block text-sm font-medium text-gray-700">User Id:</label>
+                    <div className="mt-1 relative rounded-md shadow-sm">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        </div>
+                        <input 
+                            type="text" 
+                            name="price" 
+                            id="price"
+                            value={id}
+                            className="bg-gray-300 focus:ring-indigo-500 focus:border-indigo-500 
+                            block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" 
+                            onChange={handleIdChange}
+                            />
+                        <div className="absolute inset-y-0 right-0 flex items-center">
                         </div>
                     </div>
-                </nav>
-        <section className="md:h-full flex items-center text-gray-600">
-        <div className="container px-5 py-24 mx-auto">
-            <div className="text-center mb-12">
-                <h5 className="text-base md:text-lg text-indigo-700 mb-1">See Our Recent News</h5>
-                <h1 className="text-4xl md:text-6xl text-gray-700 font-semibold">Tailwind Css Responsive Cards</h1>
-            </div>
-            <div className="flex flex-wrap -m-4">
-                <Cards posts={data} />
-            </div>            
-        </div>
-    </section>
+                </div>
+                <section className="md:h-full flex items-center text-gray-600">
+                    <div className="container px-5 py-24 mx-auto">
+                        <div className="flex flex-wrap -m-9">
+                            <Cards posts={data} />
+                        </div>            
+                    </div>
+                </section>
+        </Layout>
     </>
     )
 }
