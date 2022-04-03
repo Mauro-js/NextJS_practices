@@ -1,6 +1,7 @@
 const BASE_URL = 'https://jsonplaceholder.typicode.com';
 import useSWR from "swr";
 import { useRouter } from "next/router";
+import Layout from '../../../components/layout';
 
 const fetcher = async url => {
     const res = await fetch(`${url}`)
@@ -12,7 +13,7 @@ const fetcher = async url => {
         throw error;
     }
    
-    return res.json()
+    return res.json();
 }
 
 export default function Post(){
@@ -25,9 +26,11 @@ export default function Post(){
     if(!data) return <p>Loading</p>;
 
     return (
-        <div>
-            <h1>{data.id} - {data.title}</h1>
-            <p>{data.body}</p>
-        </div>
+        <Layout title={'Posts ' + id}>
+            <div>
+                <h1>{data.id} - {data.title}</h1>
+                <p>{data.body}</p>
+            </div>
+        </Layout>
     )
 }

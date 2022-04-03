@@ -1,6 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useSWR from 'swr';
+import Layout from '../../components/layout';
+
 
 const BASE_URL = 'https://jsonplaceholder.typicode.com';
 
@@ -48,6 +50,7 @@ const Cards = ({posts}) => {
 }
 
 const fetcher = async url => {
+
     const res = await fetch(`${url}`)
 
     if(!res.ok){
@@ -56,13 +59,24 @@ const fetcher = async url => {
         error.status = res.status;
         throw error;
     }
-   
-    return res.json()
+
+    return res.json();
 }
 
 export default function Index(){
+    const [id, setId] = useState('')
+    const [realId, setRealId] = useState(null)
 
-    const {data, error} = useSWR(`${BASE_URL}/posts`, fetcher);
+    const {data, error} = useSWR( realId ? `${BASE_URL}/posts?userId=${realId}` : `${BASE_URL}/posts`, fetcher);
+
+    useEffect(() => {
+       setTimeout(() => setRealId(id),1000);
+    },[id])
+
+    function handleIdChange(event) {
+        setId(event.target.value)
+      }
+
 
     if(!data){
         return <div className='flex justify-center items-center h-screen'>
@@ -75,16 +89,34 @@ export default function Index(){
 
 
     return (
-        <section className="md:h-full flex items-center text-gray-600">
-        <div className="container px-5 py-24 mx-auto">
-            <div className="text-center mb-12">
-                <h5 className="text-base md:text-lg text-indigo-700 mb-1">See Our Recent News</h5>
-                <h1 className="text-4xl md:text-6xl text-gray-700 font-semibold">Tailwind Css Responsive Cards</h1>
-            </div>
-            <div className="flex flex-wrap -m-4">
-                <Cards posts={data} />
-            </div>            
-        </div>
-    </section>
+        <>
+        <Layout title={'Posts'} description={'List of posts'}>
+                <div className='p-4 sm:w-1/2 lg:w-1/4'>
+                    <label htmlFor="price" className="block text-sm font-medium text-gray-700">User Id:</label>
+                    <div className="mt-1 relative rounded-md shadow-sm">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        </div>
+                        <input 
+                            type="text" 
+                            name="price" 
+                            id="price"
+                            value={id}
+                            className="bg-gray-300 focus:ring-indigo-500 focus:border-indigo-500 
+                            block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md" 
+                            onChange={handleIdChange}
+                            />
+                        <div className="absolute inset-y-0 right-0 flex items-center">
+                        </div>
+                    </div>
+                </div>
+                <section className="md:h-full flex items-center text-gray-600">
+                    <div className="container px-5 py-24 mx-auto">
+                        <div className="flex flex-wrap -m-9">
+                            <Cards posts={data} />
+                        </div>            
+                    </div>
+                </section>
+        </Layout>
+    </>
     )
 }
