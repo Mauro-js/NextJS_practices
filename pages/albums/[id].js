@@ -41,10 +41,6 @@ export default function Album(){
     if(requestStatus === 'error') return <Layout title={'Posts'} description={'List of posts'}>
                                             <Error />
                                         </Layout>
-
-    if(requestStatus === 'slow') return <Layout title={'Album'} description={'List of photos'}>
-                                            <Slow />
-                                        </Layout>;
     if(!data) return    <Layout title={'Album'} description={'List of photos'}>
                             <Loading />
                         </Layout>;
@@ -53,6 +49,7 @@ export default function Album(){
 
     return (
         <Layout title={'Album ' + id}>
+            {requestStatus === 'slow' && <Slow />}
             <section className="md:h-full flex items-center text-gray-600">
                     <div className="container px-5 py-24 mx-auto">
                         <div className="flex flex-wrap -m-9">
