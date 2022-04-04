@@ -1,7 +1,7 @@
 import Layout from '../components/layout';
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
-import {Loading, Slow} from '../components/requestStatus';
+import {Loading, Slow, Error} from '../components/requestStatus';
 import Cards from '../components/cards';
 const BASE_URL = 'https://jsonplaceholder.typicode.com';
 
@@ -38,16 +38,17 @@ export default function Home() {
         loadingTimeout: 1000
   });
 
-  if(requestStatus === 'slow') return <Layout title={'MauroApp'} description={'List of posts'}>
-                                        <Slow />
-                                    </Layout>
+  
   if(!data) return <Layout title={'MauroApp'} description={'Home'}>
                         <Loading />
                     </Layout>
-  
+  if(requestStatus === 'error') return <Layout title={'Posts'} description={'List of posts'}>
+                                        <Error />
+                                    </Layout>
 
   return (
     <Layout>
+    {requestStatus === 'slow' && <Slow />}
       <section className="md:h-full flex items-center text-gray-600">
           <div className="container px-5 py-24 mx-auto">
               <div className="flex flex-wrap -m-9">

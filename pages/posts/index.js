@@ -27,9 +27,6 @@ export default function Index(){
     const [requestStatus, setRequestStatus] = useState('loading');
 
     const {data, error} = useSWR( realId ? `${BASE_URL}/posts?userId=${realId}` : `${BASE_URL}/posts`, fetcher, {
-        onSuccess: () => {
-            setRequestStatus(false)
-         },
         onLoadingSlow: () => {
             setRequestStatus('slow')
         },
@@ -53,9 +50,6 @@ export default function Index(){
       if(requestStatus === 'error') return <Layout title={'Posts'} description={'List of posts'}>
                                             <Error />
                                         </Layout>
-    if(requestStatus === 'slow') return <Layout title={'Posts'} description={'List of posts'}>
-                                        <Slow />
-                                    </Layout>
     if(!data) return <Layout title={'Posts'} description={'List of posts'}>
                         <Loading />
                     </Layout>
@@ -64,6 +58,7 @@ export default function Index(){
     return (
         <>
         <Layout title={'Posts'} description={'List of posts'}>
+                 {requestStatus === 'slow' && <Slow />}
                 <div className='p-4 sm:w-1/2 lg:w-1/4'>
                     <label htmlFor="price" className="block text-sm font-medium text-gray-700">User Id:</label>
                     <div className="mt-1 relative rounded-md shadow-sm">
