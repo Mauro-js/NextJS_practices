@@ -16,6 +16,15 @@ const Slow = () => {
                     </div>
 }
 
+const Error = () => {
+    return <div className="flex-col flex justify-center items-center h-screen">
+                        <img src="/error.svg" className="w-1/6"/>
+                        <div className="text-center mb-12">
+                            <h5 className="text-base md:text-lg text-indigo-700 mb-1">An error has occurredon</h5>
+                        </div>
+                    </div>
+}
 
 
-export {Loading, Slow}
+
+export {Loading, Slow, Error}
