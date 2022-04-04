@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import Layout from '../../components/layout';
-import {Loading, Slow} from '../../components/requestStatus';
+import {Loading, Slow, Error} from '../../components/requestStatus';
 import Cards from '../../components/cards';
 
 const BASE_URL = 'https://jsonplaceholder.typicode.com';
@@ -14,7 +14,6 @@ const fetcher = async url => {
         const error = new Error('An error ocurred while fetching the data.');
         
         error.info = await res.json();
-        console.log(JSON.stringify(error.info,null,2));
         error.status = res.status;
        // throw error;
     }
@@ -51,12 +50,16 @@ export default function Index(){
         setId(event.target.value)
       }
 
+      if(requestStatus === 'error') return <Layout title={'Posts'} description={'List of posts'}>
+                                            <Error />
+                                        </Layout>
+    if(requestStatus === 'slow') return <Layout title={'Posts'} description={'List of posts'}>
+                                        <Slow />
+                                    </Layout>
     if(!data) return <Layout title={'Posts'} description={'List of posts'}>
                         <Loading />
                     </Layout>
-    if(requestStatus === 'slow') return <Layout title={'Posts'} description={'List of posts'}>
-                                            <Slow />
-                                        </Layout>
+    
 
     return (
         <>
@@ -82,7 +85,7 @@ export default function Index(){
                 <section className="md:h-full flex items-center text-gray-600">
                     <div className="container px-5 py-24 mx-auto">
                         <div className="flex flex-wrap -m-9">
-                            <Cards posts={data} />
+                            <Cards posts={data} prefix={'/posts/'} />
                         </div>            
                     </div>
                 </section>

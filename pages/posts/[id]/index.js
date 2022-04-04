@@ -27,9 +27,11 @@ export default function Post(){
 
     return (
         <Layout title={'Posts ' + id}>
-            <div>
-                <h1>{data.id} - {data.title}</h1>
-                <p>{data.body}</p>
+            <div className="flex-col flex justify-center items-center h-screen">
+                <div className="text-center mb-12">
+                    <h1 className="text-2xl font-semibold mb-3">{data.id} - {data.title}</h1>
+                    <p>{data.body}</p>
+                </div>
             </div>
         </Layout>
     )
